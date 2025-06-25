@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface BookRepository {
+
     Set<Book> findAll();
 
     Set<Book> findAllByAuthorId(UUID authorId);
@@ -18,4 +19,5 @@ public interface BookRepository {
     Optional<Book> update(UUID id, Book book);
 
     boolean delete(UUID id);
+
 }
