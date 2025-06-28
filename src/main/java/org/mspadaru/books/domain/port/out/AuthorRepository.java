@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface AuthorRepository {
+
     Set<Author> findAll();
 
     Optional<Author> findById(UUID id);
