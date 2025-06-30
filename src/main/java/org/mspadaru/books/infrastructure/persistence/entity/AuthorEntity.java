@@ -23,7 +23,6 @@ public class AuthorEntity {
     private String name;
 
     public AuthorEntity() {
-
     }
 
     public UUID getId() {
