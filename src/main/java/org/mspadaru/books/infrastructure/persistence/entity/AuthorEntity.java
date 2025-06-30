@@ -1,13 +1,12 @@
 package org.mspadaru.books.infrastructure.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +20,9 @@ public class AuthorEntity {
 
     @Column(nullable = false)
     private String name;
+
+    @ManyToMany(mappedBy = "authors")
+    private Set<BookEntity> books = new HashSet<>();
 
     public AuthorEntity() {
     }

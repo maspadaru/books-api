@@ -14,10 +14,9 @@ import java.util.stream.Collectors;
 @Repository
 public class AuthorJpaAdapter implements AuthorRepository {
 
-    @Autowired
     private final AuthorJpaRepository jpaRepository;
 
-    public AuthorJpaAdapter(AuthorJpaRepository jpaRepository, AuthorMapper authorMapper) {
+    public AuthorJpaAdapter(AuthorJpaRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 

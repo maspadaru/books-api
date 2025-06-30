@@ -1,12 +1,10 @@
 package org.mspadaru.books.infrastructure.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -24,9 +22,12 @@ public class BookEntity {
     String title;
 
     String isbn;
+
     LocalDate publishedDate;
 
-    Set<AuthorEntity> authors;
+    @ManyToMany
+    @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<AuthorEntity> authors = new HashSet<>();
 
     public BookEntity() {
     }
