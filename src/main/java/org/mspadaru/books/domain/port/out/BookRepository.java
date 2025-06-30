@@ -16,8 +16,8 @@ public interface BookRepository {
 
     Book create(Book book);
 
-    Optional<Book> update(UUID id, Book book);
+    Book update(Book book);
 
-    boolean delete(UUID id);
+    void delete(UUID id);
 
 }

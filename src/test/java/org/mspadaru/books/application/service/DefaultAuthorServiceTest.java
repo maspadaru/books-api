@@ -56,9 +56,12 @@ class DefaultAuthorServiceTest {
     void updateAuthor_whenAuthorIsPresent_theReturnsUpdatedAuthor() {
         AuthorRepository mockRepository = mock(AuthorRepository.class);
         AuthorService service = new DefaultAuthorService(mockRepository);
-        Author testAuthor = new Author(UUID.randomUUID(), "Test Author");
-        when(mockRepository.update(testAuthor.id(), testAuthor)).thenReturn(Optional.of(testAuthor));
-        Optional<Author> result = service.updateAuthor(testAuthor.id(), testAuthor);
+        UUID id = UUID.randomUUID();
+        Author inputAuthor = new Author(null, "Test Author");
+        Author testAuthor = new Author(id, "Test Author");
+        when(mockRepository.update(testAuthor)).thenReturn(testAuthor);
+        when(mockRepository.findById(id)).thenReturn(Optional.of(testAuthor));
+        Optional<Author> result = service.updateAuthor(id, inputAuthor);
         assertTrue(result.isPresent());
         assertEquals(testAuthor, result.get());
     }
@@ -67,9 +70,9 @@ class DefaultAuthorServiceTest {
     void deleteAuthor_whenAuthorIsPresent_thenReturnsTrue() {
         AuthorRepository mockRepository = mock(AuthorRepository.class);
         AuthorService service = new DefaultAuthorService(mockRepository);
-        UUID id = UUID.randomUUID();
-        when(mockRepository.delete(id)).thenReturn(true);
-        boolean result = service.deleteAuthor(id);
+        Author testAuthor = new Author(UUID.randomUUID(), "Test Author");
+        when(mockRepository.findById(testAuthor.id())).thenReturn(Optional.of(testAuthor));
+        boolean result = service.deleteAuthor(testAuthor.id());
         assertTrue(result);
     }
 

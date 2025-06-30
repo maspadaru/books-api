@@ -14,8 +14,8 @@ public interface AuthorRepository {
 
     Author create(Author author);
 
-    Optional<Author> update(UUID id, Author author);
+    Author update(Author author);
 
-    boolean delete(UUID id);
+    void delete(UUID id);
 
 }

@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,9 +58,12 @@ class DefaultBookServiceTest {
     void updateBook_whenBookIsPresent_thenReturnsUpdatedBook() {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
-        Book testBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of());
-        when(mockRepository.update(testBook.id(), testBook)).thenReturn(Optional.of(testBook));
-        Optional<Book> result = service.updateBook(testBook.id(), testBook);
+        UUID id = UUID.randomUUID();
+        Book inputBook = new Book(null, "Test Book", "1234567890", LocalDate.now(), Set.of());
+        Book testBook = new Book(id, "Test Book", "1234567890", LocalDate.now(), Set.of());
+        when(mockRepository.update(testBook)).thenReturn(testBook);
+        when(mockRepository.findById(id)).thenReturn(Optional.of(testBook));
+        Optional<Book> result = service.updateBook(id, inputBook);
         assertTrue(result.isPresent());
         assertEquals(testBook, result.get());
     }
@@ -70,9 +72,9 @@ class DefaultBookServiceTest {
     void deleteBook_whenBookIsPresent_thenReturnsTrue() {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
-        UUID id = UUID.randomUUID();
-        when(mockRepository.delete(id)).thenReturn(true);
-        boolean result = service.deleteBook(id);
+        Book testBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of());
+        when(mockRepository.findById(testBook.id())).thenReturn(Optional.of(testBook));
+        boolean result = service.deleteBook(testBook.id());
         assertTrue(result);
     }
 
@@ -100,7 +102,7 @@ class DefaultBookServiceTest {
         Book updatedBook = new Book(initialBook.id(), "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
         when(bookRepository.findById(initialBook.id())).thenReturn(Optional.of(initialBook));
         when(authorRepository.findById(testAuthor.id())).thenReturn(Optional.of(testAuthor));
-        when(bookRepository.update(eq(initialBook.id()), any(Book.class))).thenReturn(Optional.of(updatedBook));
+        when(bookRepository.update(any(Book.class))).thenReturn(updatedBook);
         Optional<Book> result = service.assignAuthorToBook(testAuthor.id(), initialBook.id());
         assertTrue(result.isPresent());
         assertTrue(result.get().authors().contains(testAuthor));

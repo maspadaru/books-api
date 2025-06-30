@@ -33,12 +33,19 @@ public class DefaultAuthorService implements AuthorService {
 
     @Override
     public Optional<Author> updateAuthor(UUID id, Author author) {
-        return authorRepository.update(id, author);
+        if (authorRepository.findById(id).isPresent()) {
+            return Optional.of(authorRepository.update(new Author(id, author.name())));
+        }
+        return Optional.empty();
     }
 
     @Override
     public boolean deleteAuthor(UUID id) {
-        return authorRepository.delete(id);
+        if (authorRepository.findById(id).isPresent()) {
+            authorRepository.delete(id);
+            return true;
+        }
+        return false;
     }
 
 }

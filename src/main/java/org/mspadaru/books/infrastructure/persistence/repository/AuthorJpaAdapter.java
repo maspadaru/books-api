@@ -37,19 +37,12 @@ public class AuthorJpaAdapter implements AuthorRepository {
     }
 
     @Override
-    public Optional<Author> update(UUID id, Author author) {
-        {
-            return Optional.of(jpaRepository.save(AuthorMapper.toEntity(author))).map(AuthorMapper::toDomain);
-        }
-        return Optional.empty();
+    public Author update(Author author) {
+        return AuthorMapper.toDomain(jpaRepository.save(AuthorMapper.toEntity(author)));
     }
 
     @Override
-    public boolean delete(UUID id) {
-        if (findById(id).isPresent()) {
-            jpaRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void delete(UUID id) {
+        jpaRepository.deleteById(id);
     }
 }

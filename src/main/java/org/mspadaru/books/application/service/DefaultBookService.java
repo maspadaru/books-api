@@ -43,12 +43,20 @@ public class DefaultBookService implements BookService {
 
     @Override
     public Optional<Book> updateBook(UUID id, Book book) {
-        return bookRepository.update(id, book);
+        if (bookRepository.findById(id).isPresent()) {
+            Book updatedBook = new Book(id, book.title(), book.isbn(), book.publishedDate(), book.authors());
+            return Optional.of(bookRepository.update(updatedBook));
+        }
+        return Optional.empty();
     }
 
     @Override
     public boolean deleteBook(UUID id) {
-        return bookRepository.delete(id);
+        if (bookRepository.findById(id).isPresent()) {
+            bookRepository.delete(id);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -65,7 +73,7 @@ public class DefaultBookService implements BookService {
         authorSet.add(author.get());
         Book updatedBook = new Book(bookId, book.get().title(), book.get().isbn(), book.get().publishedDate(),
                 authorSet);
-        return bookRepository.update(bookId, updatedBook);
+        return Optional.of(bookRepository.update(updatedBook));
     }
 
 }
