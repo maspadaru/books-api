@@ -5,12 +5,14 @@ import org.mspadaru.books.domain.model.Author;
 import org.mspadaru.books.domain.model.Book;
 import org.mspadaru.books.domain.port.out.AuthorRepository;
 import org.mspadaru.books.domain.port.out.BookRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+@Service
 public class DefaultBookService implements BookService {
 
     private final BookRepository bookRepository;

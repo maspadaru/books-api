@@ -3,11 +3,13 @@ package org.mspadaru.books.application.service;
 import org.mspadaru.books.application.port.in.AuthorService;
 import org.mspadaru.books.domain.model.Author;
 import org.mspadaru.books.domain.port.out.AuthorRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+@Service
 public class DefaultAuthorService implements AuthorService {
 
     private final AuthorRepository authorRepository;
