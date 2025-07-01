@@ -88,6 +88,10 @@ Or run `InventoryApplication` directly in your IDE.
 
 * The **hexagonal architecture** ensures a clean separation between domain logic and technical concerns like HTTP and database access.
 * JPA handles the many-to-many relationship via a join table.
+* This project includes **select unit and integration tests** to demonstrate the structure and behavior of a hexagonal architecture.
+  I focused on key happy-path scenarios across layers, but **did not aim for 100% test coverage** in this version.
+  In a production-grade project, you should strive for thorough testing of edge cases, error handling, and full integration flows.
+  For this sample, some tests have been omitted to maintain focus and reduce boilerplate, but the setup is easy to expand.
 * You can switch to PostgreSQL or another database by changing a few lines in `application.properties`.
 
 ## License
