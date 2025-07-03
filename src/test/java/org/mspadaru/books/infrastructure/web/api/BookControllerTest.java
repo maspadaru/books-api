@@ -8,6 +8,7 @@ import org.mspadaru.books.domain.model.Book;
 import org.mspadaru.books.infrastructure.web.dto.AuthorDto;
 import org.mspadaru.books.infrastructure.web.dto.BookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(BookController.class)
 class BookControllerTest {
 
     @Autowired
@@ -56,6 +58,14 @@ class BookControllerTest {
     }
 
     @Test
+    void getBookById_whenBookDoesNotExist_thenReturnsNotFound() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(bookService.findBookById(id)).thenReturn(java.util.Optional.empty());
+        mockMvc.perform(get("/api/books/" + id))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void createBook_whenBookIsValid_thenReturnsBookWithId() throws Exception {
         BookRequest request = new BookRequest("Test Book", "1234567890", LocalDate.now(),
                 Set.of(new AuthorDto(UUID.randomUUID(), "Sample Author")));
@@ -64,6 +74,16 @@ class BookControllerTest {
         mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON).content(
                 objectMapper.writeValueAsString(request))).andExpect(status().isCreated()).andExpect(
                 jsonPath("$.title", is(savedBook.title())));
+    }
+
+    @Test
+    void createBook_whenTitleIsBlank_thenReturnsBadRequest() throws Exception {
+        BookRequest invalidRequest = new BookRequest("  ", "1234567890", LocalDate.now(),
+                Set.of(new AuthorDto(UUID.randomUUID(), "Sample Author")));
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -77,6 +97,17 @@ class BookControllerTest {
         mockMvc.perform(put("/api/books/" + id).contentType(MediaType.APPLICATION_JSON).content(
                 objectMapper.writeValueAsString(request))).andExpect(status().isOk()).andExpect(
                 jsonPath("$.title", is(updatedBook.title())));
+    }
+
+    @Test
+    void updateBook_whenTitleIsBlank_thenReturnsBadRequest() throws Exception {
+        UUID id = UUID.randomUUID();
+        BookRequest invalidRequest = new BookRequest("  ", "1234567890", LocalDate.now(),
+                Set.of(new AuthorDto(UUID.randomUUID(), "Sample Author")));
+        mockMvc.perform(put("/api/books/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
