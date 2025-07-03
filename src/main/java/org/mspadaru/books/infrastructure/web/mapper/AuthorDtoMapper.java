@@ -5,6 +5,8 @@ import org.mspadaru.books.infrastructure.web.dto.AuthorDto;
 
 public class AuthorDtoMapper {
 
+    private AuthorDtoMapper() {}
+
     public static AuthorDto toDto(Author author) {
         return new AuthorDto(author.id(), author.name());
     }
