@@ -61,8 +61,7 @@ class BookControllerTest {
     void getBookById_whenBookDoesNotExist_thenReturnsNotFound() throws Exception {
         UUID id = UUID.randomUUID();
         when(bookService.findBookById(id)).thenReturn(java.util.Optional.empty());
-        mockMvc.perform(get("/api/books/" + id))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/books/" + id)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -80,10 +79,8 @@ class BookControllerTest {
     void createBook_whenTitleIsBlank_thenReturnsBadRequest() throws Exception {
         BookRequest invalidRequest = new BookRequest("  ", "1234567890", LocalDate.now(),
                 Set.of(new AuthorDto(UUID.randomUUID(), "Sample Author")));
-        mockMvc.perform(post("/api/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON).content(
+                objectMapper.writeValueAsString(invalidRequest))).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -104,10 +101,8 @@ class BookControllerTest {
         UUID id = UUID.randomUUID();
         BookRequest invalidRequest = new BookRequest("  ", "1234567890", LocalDate.now(),
                 Set.of(new AuthorDto(UUID.randomUUID(), "Sample Author")));
-        mockMvc.perform(put("/api/books/" + id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(put("/api/books/" + id).contentType(MediaType.APPLICATION_JSON).content(
+                objectMapper.writeValueAsString(invalidRequest))).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -122,6 +117,24 @@ class BookControllerTest {
         UUID id = UUID.randomUUID();
         when(bookService.deleteBook(id)).thenReturn(false);
         mockMvc.perform(delete("/api/books/" + id)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getBooksByAuthorId_whenBooksExist_thenReturnsBooks() throws Exception {
+        UUID authorId = UUID.randomUUID();
+        Book book1 = createSampleBook("Book 1");
+        Book book2 = createSampleBook("Book 2");
+        when(bookService.findAllBooksByAuthorId(authorId)).thenReturn(Set.of(book1, book2));
+        mockMvc.perform(get("/api/books/by-author/" + authorId)).andExpect(status().isOk()).andExpect(
+                jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    void getBooksByAuthorId_whenAuthorHasNoBooks_thenReturnsEmptyList() throws Exception {
+        UUID authorId = UUID.randomUUID();
+        when(bookService.findAllBooksByAuthorId(authorId)).thenReturn(Set.of());
+        mockMvc.perform(get("/api/books/by-author/" + authorId)).andExpect(status().isOk()).andExpect(
+                jsonPath("$", hasSize(0)));
     }
 
 }

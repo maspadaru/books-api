@@ -57,4 +57,11 @@ public class BookController {
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/by-author/{authorId}")
+    public ResponseEntity<Set<BookDto>> getBooksByAuthorId(@PathVariable UUID authorId) {
+        Set<BookDto> books = bookService.findAllBooksByAuthorId(authorId).stream().map(BookDtoMapper::toDto).collect(
+                Collectors.toSet());
+        return ResponseEntity.ok(books);
+    }
+
 }
