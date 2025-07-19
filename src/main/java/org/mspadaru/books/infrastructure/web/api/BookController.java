@@ -10,7 +10,9 @@ import org.mspadaru.books.infrastructure.web.mapper.BookRequestMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -41,7 +43,8 @@ public class BookController {
     public ResponseEntity<BookDto> createBook(@Valid @RequestBody BookRequest request) {
         Book book = BookRequestMapper.toDomain(request);
         Book savedBook = bookService.createBook(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(BookDtoMapper.toDto(savedBook));
+        URI location = URI.create("/api/authors/" + savedBook.id());
+        return ResponseEntity.created(location).body(BookDtoMapper.toDto(savedBook));
     }
 
     @PutMapping("/{id}")
@@ -52,9 +55,11 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable UUID id) {
-        boolean deleted = bookService.deleteBook(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBook(@PathVariable UUID id) {
+        if (!bookService.deleteBook(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/by-author/{authorId}")

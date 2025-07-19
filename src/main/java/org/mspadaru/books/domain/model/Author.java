@@ -10,7 +10,7 @@ public record Author(UUID id, String name) {
             throw new IllegalArgumentException("Author name is required");
         }
         if (name.length() > AuthorConstraints.NAME_MAX_LENGTH) {
-            throw new IllegalArgumentException("Author name cannot exceed 100 characters");
+            throw new IllegalArgumentException(AuthorConstraints.NAME_SIZE_MESSAGE);
         }
     }
 }
