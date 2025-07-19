@@ -18,12 +18,14 @@ import static org.mockito.Mockito.when;
 
 class DefaultBookServiceTest {
 
+    private final Author testAuthor = new Author(UUID.randomUUID(), "George Orwell");
+
     @Test
     void createBook_whenBookIsValid_thenReturnsBookWithId() {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
-        Book inputBook = new Book(null, "Test Book", "1234567890", LocalDate.now(), Set.of());
-        Book savedBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of());
+        Book inputBook = new Book(null, "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
+        Book savedBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
         when(mockRepository.create(any(Book.class))).thenReturn(savedBook);
         Book result = service.createBook(inputBook);
         assertNotNull(result);
@@ -35,7 +37,7 @@ class DefaultBookServiceTest {
     void findBookById_whenBookIsPresent_thenReturnsBookWithId() {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
-        Book testBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of());
+        Book testBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
         when(mockRepository.findById(testBook.id())).thenReturn(Optional.of(testBook));
         Optional<Book> result = service.findBookById(testBook.id());
         assertTrue(result.isPresent());
@@ -46,8 +48,8 @@ class DefaultBookServiceTest {
     void findAllBooks_whenBooksArePresent_thenReturnsBookSet() {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
-        Book firstBook = new Book(UUID.randomUUID(), "First Book", "1234567890", LocalDate.now(), Set.of());
-        Book secondBook = new Book(UUID.randomUUID(), "Second Book", "9087654321", LocalDate.now(), Set.of());
+        Book firstBook = new Book(UUID.randomUUID(), "First Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
+        Book secondBook = new Book(UUID.randomUUID(), "Second Book", "9087654321", LocalDate.now(), Set.of(testAuthor));
         Set<Book> testSet = Set.of(firstBook, secondBook);
         when(mockRepository.findAll()).thenReturn(testSet);
         Set<Book> result = service.findAllBooks();
@@ -59,8 +61,8 @@ class DefaultBookServiceTest {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
         UUID id = UUID.randomUUID();
-        Book inputBook = new Book(null, "Test Book", "1234567890", LocalDate.now(), Set.of());
-        Book testBook = new Book(id, "Test Book", "1234567890", LocalDate.now(), Set.of());
+        Book inputBook = new Book(null, "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
+        Book testBook = new Book(id, "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
         when(mockRepository.update(testBook)).thenReturn(testBook);
         when(mockRepository.findById(id)).thenReturn(Optional.of(testBook));
         Optional<Book> result = service.updateBook(id, inputBook);
@@ -72,7 +74,7 @@ class DefaultBookServiceTest {
     void deleteBook_whenBookIsPresent_thenReturnsTrue() {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
-        Book testBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of());
+        Book testBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
         when(mockRepository.findById(testBook.id())).thenReturn(Optional.of(testBook));
         boolean result = service.deleteBook(testBook.id());
         assertTrue(result);
@@ -82,7 +84,6 @@ class DefaultBookServiceTest {
     void findAllBooksByAuthorId_whenBooksArePresent_thenReturnsBookSet() {
         BookRepository mockRepository = mock(BookRepository.class);
         DefaultBookService service = new DefaultBookService(mockRepository, mock(AuthorRepository.class));
-        Author testAuthor = new Author(UUID.randomUUID(), "Test Author");
         Book firstBook = new Book(UUID.randomUUID(), "First Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
         Book secondBook = new Book(UUID.randomUUID(), "Second Book", "9087654321", LocalDate.now(), Set.of(testAuthor));
         Set<Book> testSet = Set.of(firstBook, secondBook);
@@ -97,15 +98,15 @@ class DefaultBookServiceTest {
         BookRepository bookRepository = mock(BookRepository.class);
         AuthorRepository authorRepository = mock(AuthorRepository.class);
         DefaultBookService service = new DefaultBookService(bookRepository, authorRepository);
-        Author testAuthor = new Author(UUID.randomUUID(), "Test Author");
-        Book initialBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of());
-        Book updatedBook = new Book(initialBook.id(), "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
+        Author newAuthor = new Author(UUID.randomUUID(), "Test Author");
+        Book initialBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
+        Book updatedBook = new Book(initialBook.id(), "Test Book", "1234567890", LocalDate.now(), Set.of(newAuthor));
         when(bookRepository.findById(initialBook.id())).thenReturn(Optional.of(initialBook));
-        when(authorRepository.findById(testAuthor.id())).thenReturn(Optional.of(testAuthor));
+        when(authorRepository.findById(newAuthor.id())).thenReturn(Optional.of(newAuthor));
         when(bookRepository.update(any(Book.class))).thenReturn(updatedBook);
-        Optional<Book> result = service.assignAuthorToBook(testAuthor.id(), initialBook.id());
+        Optional<Book> result = service.assignAuthorToBook(newAuthor.id(), initialBook.id());
         assertTrue(result.isPresent());
-        assertTrue(result.get().authors().contains(testAuthor));
+        assertTrue(result.get().authors().contains(newAuthor));
     }
 
 }
