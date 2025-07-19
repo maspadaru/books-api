@@ -29,7 +29,7 @@ This is a Book Inventory management system built with **Spring Boot**, structure
 
 ```
 
-com.example.books
+org.mspadaru.books
 ├── domain             # Core business logic and models (Book, Author, Ports)
 ├── application        # Use cases (e.g. register book, link authors)
 ├── infrastructure     # Adapters: controllers, JPA repositories, mappers
