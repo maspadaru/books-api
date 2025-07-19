@@ -1,5 +1,8 @@
 # Book Inventory – Hexagonal Architecture with Spring Boot
 
+[![Build Status](https://github.com/maspadaru/books-api/actions/workflows/ci.yml/badge.svg)](https://github.com/maspadaru/books-api/actions)
+
+
 This is a Book Inventory management system built with **Spring Boot**, structured using **Hexagonal Architecture (Ports & Adapters)**. The project models a real-world scenario with books and authors, where:
 
 - 📚 A book can have **multiple authors**
@@ -101,6 +104,12 @@ You can run all tests with:
 ./gradlew test
 ````
 
+## Continuous Integration (CI)
+
+This project uses **GitHub Actions** to automatically run all tests on every `git push`.
+
+- The workflow is defined in `.github/workflows/ci.yml`
+- The CI pipeline runs `./gradlew test` and reports results under the **Actions** tab of the GitHub repository.
 
 ## Notes
 
