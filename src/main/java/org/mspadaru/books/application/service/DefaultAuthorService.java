@@ -5,6 +5,7 @@ import org.mspadaru.books.domain.model.Author;
 import org.mspadaru.books.domain.port.out.AuthorRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class DefaultAuthorService implements AuthorService {
 
     @Override
     public Author createAuthor(Author author) {
+        Objects.requireNonNull(author, "Author must not be null");
         return authorRepository.create(author);
     }
 

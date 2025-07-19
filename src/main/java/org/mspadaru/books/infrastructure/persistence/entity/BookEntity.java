@@ -1,7 +1,10 @@
 package org.mspadaru.books.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.UuidGenerator;
+import org.mspadaru.books.domain.model.constraints.BookConstraints;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -9,7 +12,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * JPA entity representing a book.
+ * <p>
+ * This entity maps to the "book" table in the database.
+ * Each book has a UUID, title, optional ISBN, publication date, and a many-to-many relationship with authors.
+ * The authors are stored via the "book_author" join table, and this entity owns the relationship.
+ */
 @Entity
+@Table(name = "books")
 public class BookEntity {
 
     @Id
@@ -18,12 +29,17 @@ public class BookEntity {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
+    @NotBlank
+    @Size(max = BookConstraints.TITLE_MAX_LENGTH)
     @Column(nullable = false)
-    String title;
+    private String title;
 
-    String isbn;
+    @Size(max = BookConstraints.ISBN_MAX_LENGTH)
+    @Column(nullable = false)
+    private String isbn;
 
-    LocalDate publishedDate;
+    @Column(nullable = false)
+    private LocalDate publishedDate;
 
     @ManyToMany
     @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))

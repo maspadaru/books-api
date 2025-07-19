@@ -11,6 +11,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Hexagonal adapter that connects the domain-level AuthorRepository
+ * to a JPA-backed persistence layer.
+ *
+ * Converts between domain models and JPA entities.
+ */
 @Repository
 public class AuthorJpaAdapter implements AuthorRepository {
 

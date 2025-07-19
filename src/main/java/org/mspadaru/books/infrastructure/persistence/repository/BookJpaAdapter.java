@@ -11,6 +11,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Hexagonal adapter that connects the domain-level BookRepository
+ * to a JPA-backed persistence layer.
+ *
+ * Responsible for mapping between domain and persistence representations.
+ */
 @Repository
 public class BookJpaAdapter implements BookRepository {
 

@@ -8,13 +8,33 @@ import org.mspadaru.books.infrastructure.persistence.entity.BookEntity;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BookMapper {
+/**
+ * Utility class for converting between Book domain model and persistence entity.
+ */
+public final class BookMapper {
 
+    private BookMapper() {
+        // Prevent instantiation
+    }
+
+    /**
+     * Converts a JPA BookEntity to a domain Book.
+     *
+     * @param entity the JPA entity
+     * @return the domain model
+     */
     public static Book toDomain(BookEntity entity) {
         Set<Author> authorSet = entity.getAuthors().stream().map(AuthorMapper::toDomain).collect(Collectors.toSet());
+
         return new Book(entity.getId(), entity.getTitle(), entity.getIsbn(), entity.getPublishedDate(), authorSet);
     }
 
+    /**
+     * Converts a domain Book to a JPA BookEntity.
+     *
+     * @param book the domain model
+     * @return the JPA entity
+     */
     public static BookEntity toEntity(Book book) {
         BookEntity entity = new BookEntity();
         entity.setId(book.id());
@@ -26,5 +46,4 @@ public class BookMapper {
         entity.setAuthors(authorEntitySet);
         return entity;
     }
-
 }

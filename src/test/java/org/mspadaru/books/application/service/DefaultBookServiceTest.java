@@ -49,6 +49,11 @@ class DefaultBookServiceTest {
     }
 
     @Test
+    void createBook_whenBookIsNull_thenThrowsException() {
+        assertThrows(NullPointerException.class, () -> service.createBook(null));
+    }
+
+    @Test
     void findBookById_whenBookIsPresent_thenReturnsBookWithId() {
         Book testBook = new Book(UUID.randomUUID(), "Test Book", "1234567890", LocalDate.now(), Set.of(testAuthor));
 

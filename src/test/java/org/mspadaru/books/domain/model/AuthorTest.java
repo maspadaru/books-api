@@ -1,6 +1,7 @@
 package org.mspadaru.books.domain.model;
 
 import org.junit.jupiter.api.Test;
+import org.mspadaru.books.domain.model.constraints.AuthorConstraints;
 
 import java.util.UUID;
 
@@ -23,6 +24,12 @@ class AuthorTest {
     @Test
     void newAuthor_whenNameIsBlank_thenThrows() {
         assertThrows(IllegalArgumentException.class, () -> new Author(UUID.randomUUID(), "  "));
+    }
+
+    @Test
+    void newAuthor_whenNameExceedsMaxLength_thenThrowsException() {
+        String longName = "A".repeat(AuthorConstraints.NAME_MAX_LENGTH + 1);
+        assertThrows(IllegalArgumentException.class, () -> new Author(null, longName));
     }
 
 }

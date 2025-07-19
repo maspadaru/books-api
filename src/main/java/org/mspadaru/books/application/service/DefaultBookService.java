@@ -7,10 +7,7 @@ import org.mspadaru.books.domain.port.out.AuthorRepository;
 import org.mspadaru.books.domain.port.out.BookRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DefaultBookService implements BookService {
@@ -40,6 +37,7 @@ public class DefaultBookService implements BookService {
 
     @Override
     public Book createBook(Book book) {
+        Objects.requireNonNull(book, "Book must not be null");
         return bookRepository.create(book);
     }
 
