@@ -7,12 +7,14 @@ This is a Book Inventory management system built with **Spring Boot**, structure
 
 ## Features
 
-- ✅ Create, update, and delete books
-- ✅ Create and list authors
-- 🔗 Assign and retrieve relationships between books and authors
-- 🧱 Built using Hexagonal Architecture
-- 🗄️ Uses **Spring Data JPA** with a **many-to-many relationship**
-- 🧪 Uses in-memory **H2 database** for quick development and testing
+- ✅ Create, update, delete, and retrieve books and authors
+- 🔗 Many-to-many relationship between books and authors
+- ✅ Validation enforced at API, domain, and persistence levels
+- 🧪 Robust unit and integration tests
+- 💡 Clean separation using DTOs and mappers
+- 🧱 Structured with Hexagonal Architecture (Ports & Adapters)
+- 🗄️ Uses **Spring Data JPA** and in-memory **H2 database** for development
+
 
 ## Technologies
 
@@ -27,13 +29,13 @@ This is a Book Inventory management system built with **Spring Boot**, structure
 
 ```
 
-com.example.inventory
+com.example.books
 ├── domain             # Core business logic and models (Book, Author, Ports)
 ├── application        # Use cases (e.g. register book, link authors)
 ├── infrastructure     # Adapters: controllers, JPA repositories, mappers
 │   ├── persistence
 │   └── web
-└── InventoryApplication.java  # Spring Boot entry point
+└── BooksApplication.java  # Spring Boot entry point
 
 ````
 
@@ -49,32 +51,33 @@ com.example.inventory
 
 ## API Endpoints
 
+Base path: `/api`
+
 ### Books
 
-| Method | Endpoint            | Description                |
-|--------|---------------------|----------------------------|
-| GET    | `/books`            | List all books             |
-| GET    | `/books/{id}`       | Get book by ID             |
-| POST   | `/books`            | Create a new book          |
-| PUT    | `/books/{id}`       | Update a book              |
-| DELETE | `/books/{id}`       | Delete a book              |
+| Method | Endpoint                   | Description       |
+|--------|----------------------------|-------------------|
+| GET    | `/api/books`              | List all books    |
+| GET    | `/api/books/{id}`         | Get book by ID    |
+| POST   | `/api/books`              | Create a book     |
+| PUT    | `/api/books/{id}`         | Update a book     |
+| DELETE | `/api/books/{id}`         | Delete a book     |
 
 ### Authors
 
-| Method | Endpoint             | Description                |
-|--------|----------------------|----------------------------|
-| GET    | `/authors`           | List all authors           |
-| GET    | `/authors/{id}`      | Get author by ID           |
-| POST   | `/authors`           | Create a new author        |
-| PUT    | `/authors/{id}`      | Update an author           |
-| DELETE | `/authors/{id}`      | Delete an author           |
+| Method | Endpoint                   | Description        |
+|--------|----------------------------|--------------------|
+| GET    | `/api/authors`           | List all authors   |
+| GET    | `/api/authors/{id}`      | Get author by ID   |
+| POST   | `/api/authors`           | Create an author   |
+| PUT    | `/api/authors/{id}`      | Update an author   |
+| DELETE | `/api/authors/{id}`      | Delete an author   |
 
-### Relationships
+### Extra
 
-| Method | Endpoint                                        | Description                            |
-|--------|-------------------------------------------------|----------------------------------------|
-| POST   | `/books/{bookId}/authors/{authorId}`            | Assign author to book                  |
-| DELETE | `/books/{bookId}/authors/{authorId}`            | Remove author from book                |
+| Method | Endpoint                                | Description                  |
+|--------|------------------------------------------|------------------------------|
+| GET    | `/api/books/by-author/{authorId}`       | List books by author ID      |
 
 ## Running the App
 
@@ -82,16 +85,27 @@ com.example.inventory
 ./gradlew bootRun
 ````
 
-Or run `InventoryApplication` directly in your IDE.
+Or run `BookApplication` directly in your IDE.
+
+## Testing
+
+This project includes:
+
+- ✅ **Unit tests** for domain logic and controllers
+- ✅ **Integration tests** for persistence adapters
+- ✅ **Web layer tests** with `MockMvc`
+
+You can run all tests with:
+
+```bash
+./gradlew test
+````
+
 
 ## Notes
 
 * The **hexagonal architecture** ensures a clean separation between domain logic and technical concerns like HTTP and database access.
 * JPA handles the many-to-many relationship via a join table.
-* This project includes **select unit and integration tests** to demonstrate the structure and behavior of a hexagonal architecture.
-  I focused on key happy-path scenarios across layers, but **did not aim for 100% test coverage** in this version.
-  In a production-grade project, you should strive for thorough testing of edge cases, error handling, and full integration flows.
-  For this sample, some tests have been omitted to maintain focus and reduce boilerplate, but the setup is easy to expand.
 * You can switch to PostgreSQL or another database by changing a few lines in `application.properties`.
 
 ## License
